@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050b15"><title>JARVIS Ultimate Mobile</title>
+<style>
+:root{--c:#62e8ff;--line:#16415a;--panel:#0b1929;--bg:#040b14;--txt:#e8f8ff;--muted:#8ca8bd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#102b42,#050b14 62%);font-family:system-ui,Segoe UI,sans-serif;color:var(--txt);min-height:100vh}main{max-width:640px;margin:auto;padding:15px}
+header{text-align:center;padding:14px 0 20px}.brand{font-size:1.55rem;letter-spacing:.32em;color:var(--c);font-weight:900;text-shadow:0 0 15px #38c8ef66}.sub{font-size:.67rem;letter-spacing:.18em;color:var(--muted);margin-top:6px}
+.card{border:1px solid var(--line);border-radius:20px;padding:15px;margin:12px 0;background:linear-gradient(145deg,#0c1e30ee,#07121fee);box-shadow:0 12px 32px #0003}
+.core{height:226px;display:grid;place-items:center}.orb{height:170px;width:170px;border:2px solid #4ddcf8;border-radius:50%;display:grid;place-items:center;position:relative;box-shadow:0 0 24px #1c9dce55,inset 0 0 28px #1694bd44;animation:pulse 3.2s ease-in-out infinite}.orb:before,.orb:after{content:"";position:absolute;border:1px solid #56dff777;border-radius:50%}.orb:before{inset:12px}.orb:after{inset:30px}.orb span{font-size:1.75rem;font-weight:900;letter-spacing:.13em;color:#d3faff;text-shadow:0 0 15px #60eaff}
+@keyframes pulse{50%{transform:scale(1.035);box-shadow:0 0 38px #1c9dce,inset 0 0 36px #1694bd77}}
+.status{text-align:center;color:var(--c);font-size:.86rem}.modes{display:flex;gap:7px;margin:13px 0}.modes button{flex:1;padding:10px 6px;font-size:.76rem}
+button{background:#0c2c45;color:#ecfbff;border:1px solid #1f7395;border-radius:12px;padding:11px 13px;font-weight:700}button:active{transform:scale(.98)}.active{background:linear-gradient(135deg,#13678b,#0c2d4a);border-color:#65eaff}
+.row{display:flex;gap:8px}.talk{flex:1}.talk.listening{background:#792c42;border-color:#ff7594}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}.quick button{font-size:.77rem;padding:9px 11px}
+.title{font-size:.76rem;letter-spacing:.13em;color:#b8eaf8;margin-bottom:10px}.chat{height:225px;overflow:auto;border:1px solid #15354c;background:#050f1a;border-radius:13px;padding:9px}
+.msg{margin:7px 0;padding:9px;border-radius:11px;font-size:.9rem;line-height:1.45;overflow-wrap:anywhere}.bot{background:#0c263a;border:1px solid #164762}.user{background:#142333;border:1px solid #263b50}.msg b{display:block;color:var(--c);font-size:.72rem;margin-bottom:3px}
+.entry{display:flex;gap:7px;margin-top:10px}input{min-width:0;flex:1;border:1px solid #1a4862;background:#06111c;color:white;border-radius:12px;padding:12px;font-size:1rem}
+.hint{font-size:.75rem;color:var(--muted);line-height:1.5;margin-top:10px}.footer{text-align:center;color:#718ba0;font-size:.68rem;letter-spacing:.12em;padding:12px}
+</style></head>
+<body><main>
+<header><div class="brand">J.A.R.V.I.S.</div><div class="sub">ULTIMATE MOBILE EDITION • PERSONAL ASSISTANT</div></header>
+<section class="card">
+<div class="core"><div class="orb"><span>J.A.I.</span></div></div><div class="status" id="status">SYSTEM READY</div>
+<div class="modes"><button class="active" data-mode="classic">CLASSIC</button><button data-mode="advanced">ADVANCED</button><button data-mode="dark">DARK MODE</button></div>
+<div class="row"><button class="talk active" id="mic">🎙 Talk to Jarvis</button><button id="stop">Stop</button></div>
+<div class="quick">
+<button data-command="What time is it?">⏱ Time</button><button data-command="What is today's date?">📅 Date</button><button data-command="Open YouTube">▶ YouTube</button><button data-command="Open Google">⌕ Google</button><button data-command="Open ChatGPT">✦ AI Chat</button>
+</div></section>
+<section class="card"><div class="title">CONVERSATION</div><div class="chat" id="chat"><div class="msg bot"><b>JARVIS</b>Good day. All systems are ready. Choose a personality and give me a command.</div></div>
+<div class="entry"><input id="input" placeholder="Enter command..." autocomplete="off"><button id="send">Send</button></div></section>
+<section class="card"><div class="title">ASSISTANT CAPABILITIES</div><div class="hint">Voice recognition • Spoken responses • Time & date • Website shortcuts • ChatGPT handoff • Personality modes<br><br>This is a mobile browser prototype. It does not listen in the background, independently access private phone data, or store long-term personal memory. AI questions open ChatGPT in your browser.</div></section>
+<div class="footer">JARVIS MOBILE • USER-CONTROLLED • SESSION ONLY</div>
+</main>
+<script>
+let mode='classic';const chat=document.getElementById('chat'),status=document.getElementById('status'),mic=document.getElementById('mic');
+const styleText={classic:'Respond politely and concisely, with a calm formal British-style assistant tone.',advanced:'Be a smart, clear, friendly AI assistant. Explain and reason carefully.',dark:'Use a concise, serious command-center style. Avoid unnecessary words.'};
+function append(role,txt){let d=document.createElement('div');d.className='msg '+(role==='YOU'?'user':'bot');let b=document.createElement('b');b.textContent=role;d.append(b,document.createTextNode(txt));chat.append(d);chat.scrollTop=chat.scrollHeight}
+function speak(txt){if(!window.speechSynthesis)return;status.textContent='SPEAKING';speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(txt);u.lang='en-IN';u.rate=mode==='classic'?.9:1;u.onend=()=>status.textContent='SYSTEM READY';speechSynthesis.speak(u)}
+function go(url){window.open(url,'_blank','noopener')}
+function answer(raw){let q=raw.trim();if(!q)return;append('YOU',q);document.getElementById('input').value='';let s=q.toLowerCase(),r='',handoff=false,site='';
+if(/\b(hello|hi|hey)\b/.test(s))r=mode==='classic'?'Good day. How may I assist you?':'Hello. How can I help?';
+else if(s.includes('time'))r='The time is '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+else if(s.includes('date')||s.includes('today'))r='Today is '+new Date().toLocaleDateString([],{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+else if(s.includes('open youtube')){r='Opening YouTube.';site='https://youtube.com'}
+else if(s.includes('open google')){r='Opening Google.';site='https://google.com'}
+else if(s.includes('open chatgpt')){r='Opening ChatGPT.';site='https://chatgpt.com'}
+else if(s.includes('help')||s.includes('what can you do'))r='I can tell you the time and date, open YouTube, Google or ChatGPT, and hand off general AI questions to ChatGPT.';
+else {r='I can help you continue this question in ChatGPT. Opening the AI chat.';handoff=true}
+append('JARVIS',r);speak(r);if(site)setTimeout(()=>go(site),350);if(handoff)setTimeout(()=>go('https://chatgpt.com/?q='+encodeURIComponent(q+' '+styleText[mode])),350)}
+document.getElementById('send').onclick=()=>answer(document.getElementById('input').value);document.getElementById('input').addEventListener('keydown',e=>{if(e.key==='Enter')answer(e.target.value)});
+document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>answer(b.dataset.command));
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));append('JARVIS','Personality set to '+mode+'. '+styleText[mode]);speak('Personality set to '+mode)});
+document.getElementById('stop').onclick=()=>{if(rec)rec.stop();if(window.speechSynthesis)speechSynthesis.cancel();status.textContent='STOPPED'};
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;if(SR){rec=new SR();rec.lang='en-IN';rec.interimResults=false;rec.onstart=()=>{mic.classList.add('listening');mic.textContent='Listening…';status.textContent='LISTENING'};rec.onresult=e=>answer(e.results[0][0].transcript);rec.onerror=e=>status.textContent='VOICE ERROR: '+e.error;rec.onend=()=>{mic.classList.remove('listening');mic.textContent='🎙 Talk to Jarvis';if(status.textContent==='LISTENING')status.textContent='SYSTEM READY'};mic.onclick=()=>{try{rec.start()}catch(e){status.textContent='VOICE INPUT ACTIVE'}}}else mic.onclick=()=>status.textContent='Voice recognition unsupported in this browser. Try Chrome.';
+</script></body></html>
